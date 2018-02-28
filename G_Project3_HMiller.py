@@ -8,8 +8,6 @@ import re
 #    return filecheck 
 
 
-
-
 def main():
     # Open connection to URL
     print "Attempting to make connection with https://s3.amazonaws.com/tcmg476/http_access_log..."
@@ -335,6 +333,6 @@ def regexsearch(lines):
 if __name__ == "__main__":
 #    print checkfile()
     main()
-#    openwrite(data)
+    openwrite(data)
     fl = openread()
     regexsearch(fl)
