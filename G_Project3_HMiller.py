@@ -2,6 +2,7 @@ from __future__ import division
 import os
 import urllib2
 import re
+import operator
 
 #def checkfile():
 #    filecheck = os.path.isfile('./http_access_log.txt')
@@ -66,17 +67,21 @@ def regexsearch(lines):
     regex = re.compile(".*\[([^:]*):(.*) \-[0-9]{4}\] \"([A-Z]+) (.+?)( HTTP.*\"|\") ([2-5]0[0-9]) .*")
     
     # Splitting lines for finding least and most requested files
+    FILES = {}
     for x in lines:
         parts = regex.split(x)
         if (len(parts) >= 7):
-            if parts[4] not in NEWFILES and parts[4] not in MULTFILES:
+            if parts[4] not in NEWFILES and parts[4] not in FILES:
                 NEWFILES.append(parts[4])
-            elif parts[4] in NEWFILES and parts[4] not in MULTFILES:
-                MULTFILES.append(parts[4])
+            elif parts[4] in NEWFILES and parts[4] not in FILES:
+                FILES[parts[4]] = 2
                 NEWFILES.remove(parts[4])
+            elif parts[4] not in NEWFILES and parts [4] in FILES:
+                FILES[parts[4]] += 1
+    maximum = max(FILES.iteritems(), key=operator.itemgetter(1))[0]
+    print "Number of files that were only requested once:", len(NEWFILES), "A few examples include:", NEWFILES[12], ",", NEWFILES[534], ", and", NEWFILES[696]
+    print "Number of files that were requested on multiple occassions:", len(FILES.keys()), ". The most requested file is:", maximum, ". It has been requested", FILES[maximum], "times. \n"
 
-    print "Number of files that were only requested once:", len(NEWFILES), "a few examples include:", NEWFILES[12] + ",", NEWFILES[534] + ", and", NEWFILES[696]
-    print "Number of files that were requested on multiple occassions:", len(MULTFILES), "\n"   
 
     # Splitting lines and counting 4xx/3xx status codes
     for x in lines:
