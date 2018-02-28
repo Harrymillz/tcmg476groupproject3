@@ -38,7 +38,9 @@ def openread():
         fl = f.readlines()
         for x in fl:
             count = count + 1
-        print "Total requests within log :", count, "\n"    
+        print "Total requests within log:", count, "\n"
+        monthlyaverage = count/12
+        print "Average number of requests per month:", str(round(monthlyaverage,2)), "\n"
     return fl
 
 def regexsearch(lines):
