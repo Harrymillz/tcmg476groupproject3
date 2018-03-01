@@ -33,6 +33,7 @@ def openwrite(lines):
     f.close()
     
 def openread():
+    global count
     count = 0
     f = open("http_access_log.txt","r")
     if f.mode == 'r':
@@ -46,7 +47,9 @@ def openread():
 
 def regexsearch(lines):
     statuscount400 = 0
+     
     statuscount300 = 0
+     
     # Open files of months to write data to
     a = open("October1994.txt","w+")
     b = open("November.txt","w+")
@@ -93,7 +96,11 @@ def regexsearch(lines):
                 statuscount400 += 1
             if ('300' in parts[6] or '301' in parts[6] or '302' in parts[6] or '303' in parts[6] or '304' in parts[6] or '305' in parts[6] or '306' in parts[6] or '307' in parts[6] or '308' in parts[6]):
                 statuscount300 += 1 
-    print("There are a total of", statuscount400, "4XX status codes, and", statuscount300, "3XX status codes.\n")
+    percentage400 = (statuscount400 / count)
+    percentage300 = (statuscount300 / count)
+    print("There are a total of", statuscount400, "4XX status codes, and", statuscount300, "3XX status codes.")
+    print("Percentage of 4XX status codes: " + str(round(percentage400,2)) + "%")
+    print("Percentage of 3XX status codes: " + str(round(percentage300,2)) + "%")
     print("Standby for summary of requests...\n")
  
          
