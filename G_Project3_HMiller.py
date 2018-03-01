@@ -1,6 +1,6 @@
-from __future__ import division
+
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import re
 import operator
 
@@ -11,11 +11,11 @@ import operator
 
 def main():
     # Open connection to URL
-    print "Attempting to make connection with https://s3.amazonaws.com/tcmg476/http_access_log..."
-    webUrl = urllib2.urlopen("https://s3.amazonaws.com/tcmg476/http_access_log")
+    print("Attempting to make connection with https://s3.amazonaws.com/tcmg476/http_access_log...")
+    webUrl = urllib.request.urlopen("https://s3.amazonaws.com/tcmg476/http_access_log")
     
     # Get the result code and print it
-    print "Result Code: " + str(webUrl.getcode()), "Successful Connection. \n"    
+    print("Result Code: " + str(webUrl.getcode()), "Successful Connection. \n")    
     
     # Read the data from the URL and Print it
     global data
@@ -27,7 +27,7 @@ def openwrite(lines):
     f = open("http_access_log.txt","w+")
     
     # Write the data from the website to the file
-    f.write(lines)
+    f.write(lines.decode("UTF-8"))
     
     # Close the file when done
     f.close()
@@ -39,9 +39,9 @@ def openread():
         fl = f.readlines()
         for x in fl:
             count = count + 1
-        print "Total requests within log:", count, "\n"
+        print("Total requests within log:", count, "\n")
         monthlyaverage = count/12
-        print "Average number of requests per month:", str(round(monthlyaverage,2)), "\n"
+        print("Average number of requests per month:", str(round(monthlyaverage,2)), "\n")
     return fl
 
 def regexsearch(lines):
@@ -78,9 +78,9 @@ def regexsearch(lines):
                 NEWFILES.remove(parts[4])
             elif parts[4] not in NEWFILES and parts [4] in FILES:
                 FILES[parts[4]] += 1
-    maximum = max(FILES.iteritems(), key=operator.itemgetter(1))[0]
-    print "Number of files that were only requested once:", len(NEWFILES), "A few examples include:", NEWFILES[12], ",", NEWFILES[534], ", and", NEWFILES[696]
-    print "Number of files that were requested on multiple occassions:", len(FILES.keys()), ". The most requested file is:", maximum, ". It has been requested", FILES[maximum], "times. \n"
+    maximum = max(iter(FILES.items()), key=operator.itemgetter(1))[0]
+    print("Number of files that were only requested once:", len(NEWFILES), "A few examples include:", NEWFILES[12], ",", NEWFILES[534], ", and", NEWFILES[696])
+    print("Number of files that were requested on multiple occassions:", len(list(FILES.keys())), ". The most requested file is:", maximum, ". It has been requested", FILES[maximum], "times. \n")
 
 
     # Splitting lines and counting 4xx/3xx status codes
@@ -93,8 +93,8 @@ def regexsearch(lines):
                 statuscount400 += 1
             if ('300' in parts[6] or '301' in parts[6] or '302' in parts[6] or '303' in parts[6] or '304' in parts[6] or '305' in parts[6] or '306' in parts[6] or '307' in parts[6] or '308' in parts[6]):
                 statuscount300 += 1 
-    print "There are a total of", statuscount400, "4XX status codes, and", statuscount300, "3XX status codes.\n"
-    print "Standby for summary of requests...\n"
+    print("There are a total of", statuscount400, "4XX status codes, and", statuscount300, "3XX status codes.\n")
+    print("Standby for summary of requests...\n")
  
          
     # Splitting lines and adding to month files
@@ -198,9 +198,9 @@ def regexsearch(lines):
             oct94fcount += 1
     oct94davg = oct94fcount/8
     oct94wavg = oct94fcount/1.14
-    print "October 1994 results:"       
-    print "During the month of October 1994, there was a total number of", oct94fcount, "beginning on the 24th."
-    print "That is an average of", oct94davg, "requests per day, and an average of", str(round(oct94wavg,2)), "requests per week."
+    print("October 1994 results:")       
+    print("During the month of October 1994, there was a total number of", oct94fcount, "beginning on the 24th.")
+    print("That is an average of", oct94davg, "requests per day, and an average of", str(round(oct94wavg,2)), "requests per week.")
     
     if b.mode == 'r':
         novr = b.readlines()
@@ -208,9 +208,9 @@ def regexsearch(lines):
             novfcount += 1
     novdavg = novfcount/30
     novwavg = novfcount/4.29
-    print "\nNovember 1994 results:"       
-    print "During the month of November 1994, there was a total number of " + str(novfcount) + "."
-    print "That is an average of", str(round(novdavg,2)), "requests per day, and an average of", str(round(novwavg,2)), "requests per week."    
+    print("\nNovember 1994 results:")       
+    print("During the month of November 1994, there was a total number of " + str(novfcount) + ".")
+    print("That is an average of", str(round(novdavg,2)), "requests per day, and an average of", str(round(novwavg,2)), "requests per week.")    
 
     if c.mode == 'r':
         decr = c.readlines()
@@ -218,9 +218,9 @@ def regexsearch(lines):
             decfcount += 1
     decdavg = decfcount/31
     decwavg = decfcount/4.43
-    print "\nDecember 1994 results:"       
-    print "During the month of December 1994, there was a total number of " + str(decfcount) + "."
-    print "That is an average of", str(round(decdavg,2)), "requests per day, and an average of", str(round(decwavg,2)), "requests per week."    
+    print("\nDecember 1994 results:")       
+    print("During the month of December 1994, there was a total number of " + str(decfcount) + ".")
+    print("That is an average of", str(round(decdavg,2)), "requests per day, and an average of", str(round(decwavg,2)), "requests per week.")    
     
     if d.mode == 'r':
         janr = d.readlines()
@@ -228,9 +228,9 @@ def regexsearch(lines):
             janfcount += 1
     jandavg = janfcount/31
     janwavg = janfcount/4.43
-    print "\nJanuary 1995 results:"       
-    print "During the month of January 1995, there was a total number of " + str(janfcount) + "."
-    print "That is an average of", str(round(jandavg,2)), "requests per day, and an average of", str(round(janwavg,2)), "requests per week."
+    print("\nJanuary 1995 results:")       
+    print("During the month of January 1995, there was a total number of " + str(janfcount) + ".")
+    print("That is an average of", str(round(jandavg,2)), "requests per day, and an average of", str(round(janwavg,2)), "requests per week.")
     
     if e.mode == 'r':
         febr = e.readlines()
@@ -238,9 +238,9 @@ def regexsearch(lines):
             febfcount += 1
     febdavg = febfcount/28
     febwavg = febfcount/4
-    print "\nFebruary 1995 results:"       
-    print "During the month of February 1995, there was a total number of " + str(febfcount) + "."
-    print "That is an average of", str(round(febdavg,2)), "requests per day, and an average of", str(round(febwavg,2)), "requests per week."    
+    print("\nFebruary 1995 results:")       
+    print("During the month of February 1995, there was a total number of " + str(febfcount) + ".")
+    print("That is an average of", str(round(febdavg,2)), "requests per day, and an average of", str(round(febwavg,2)), "requests per week.")    
     
     if f.mode == 'r':
         marr = f.readlines()
@@ -248,9 +248,9 @@ def regexsearch(lines):
             marfcount += 1
     mardavg = marfcount/31
     marwavg = marfcount/4.43
-    print "\nMarch 1995 results:"       
-    print "During the month of March 1995, there was a total number of " + str(marfcount) + "."
-    print "That is an average of", str(round(mardavg,2)), "requests per day, and an average of", str(round(marwavg,2)), "requests per week." 
+    print("\nMarch 1995 results:")       
+    print("During the month of March 1995, there was a total number of " + str(marfcount) + ".")
+    print("That is an average of", str(round(mardavg,2)), "requests per day, and an average of", str(round(marwavg,2)), "requests per week.") 
     
     if g.mode == 'r':
         aprr = g.readlines()
@@ -258,9 +258,9 @@ def regexsearch(lines):
             aprfcount += 1
     aprdavg = aprfcount/30
     aprwavg = aprfcount/4.29
-    print "\nApril 1995 results:"       
-    print "During the month of April 1995, there was a total number of " + str(aprfcount) + "."
-    print "That is an average of", str(round(aprdavg,2)), "requests per day, and an average of", str(round(aprwavg,2)), "requests per week." 
+    print("\nApril 1995 results:")       
+    print("During the month of April 1995, there was a total number of " + str(aprfcount) + ".")
+    print("That is an average of", str(round(aprdavg,2)), "requests per day, and an average of", str(round(aprwavg,2)), "requests per week.") 
     
     if h.mode == 'r':
         mayr = h.readlines()
@@ -268,9 +268,9 @@ def regexsearch(lines):
             mayfcount += 1
     maydavg = mayfcount/31
     maywavg = mayfcount/4.43
-    print "\nMay 1995 results:"       
-    print "During the month of May 1995, there was a total number of " + str(mayfcount) + "."
-    print "That is an average of", str(round(maydavg,2)), "requests per day, and an average of", str(round(maywavg,2)), "requests per week."    
+    print("\nMay 1995 results:")       
+    print("During the month of May 1995, there was a total number of " + str(mayfcount) + ".")
+    print("That is an average of", str(round(maydavg,2)), "requests per day, and an average of", str(round(maywavg,2)), "requests per week.")    
 
     if i.mode == 'r':
         junr = i.readlines()
@@ -278,9 +278,9 @@ def regexsearch(lines):
             junfcount += 1
     jundavg = junfcount/30
     junwavg = junfcount/4.29
-    print "\nJune 1995 results:"       
-    print "During the month of June 1995, there was a total number of " + str(junfcount) + "."
-    print "That is an average of", str(round(jundavg,2)), "requests per day, and an average of", str(round(junwavg,2)), "requests per week." 
+    print("\nJune 1995 results:")       
+    print("During the month of June 1995, there was a total number of " + str(junfcount) + ".")
+    print("That is an average of", str(round(jundavg,2)), "requests per day, and an average of", str(round(junwavg,2)), "requests per week.") 
     
     if j.mode == 'r':
         julr = j.readlines()
@@ -288,9 +288,9 @@ def regexsearch(lines):
             julfcount += 1
     juldavg = julfcount/31
     julwavg = julfcount/4.43
-    print "\nJuly 1995 results:"       
-    print "During the month of July 1995, there was a total number of " + str(julfcount) + "."
-    print "That is an average of", str(round(juldavg,2)), "requests per day, and an average of", str(round(julwavg,2)), "requests per week."
+    print("\nJuly 1995 results:")       
+    print("During the month of July 1995, there was a total number of " + str(julfcount) + ".")
+    print("That is an average of", str(round(juldavg,2)), "requests per day, and an average of", str(round(julwavg,2)), "requests per week.")
     
     if k.mode == 'r':
         augr = k.readlines()
@@ -298,9 +298,9 @@ def regexsearch(lines):
             augfcount += 1
     augdavg = augfcount/31
     augwavg = augfcount/4.43
-    print "\nAugust 1995 results:"       
-    print "During the month of August 1995, there was a total number of " + str(augfcount) + "."
-    print "That is an average of", str(round(augdavg,2)), "requests per day, and an average of", str(round(augwavg,2)), "requests per week."   
+    print("\nAugust 1995 results:")       
+    print("During the month of August 1995, there was a total number of " + str(augfcount) + ".")
+    print("That is an average of", str(round(augdavg,2)), "requests per day, and an average of", str(round(augwavg,2)), "requests per week.")   
     
     if l.mode == 'r':
         sepr = l.readlines()
@@ -308,9 +308,9 @@ def regexsearch(lines):
             sepfcount += 1
     sepdavg = sepfcount/30
     sepwavg = sepfcount/4.29
-    print "\nSeptember 1995 results:"       
-    print "During the month of September 1995, there was a total number of " + str(sepfcount) + "."
-    print "That is an average of", str(round(sepdavg,2)), "requests per day, and an average of", str(round(sepwavg,2)), "requests per week."    
+    print("\nSeptember 1995 results:")       
+    print("During the month of September 1995, there was a total number of " + str(sepfcount) + ".")
+    print("That is an average of", str(round(sepdavg,2)), "requests per day, and an average of", str(round(sepwavg,2)), "requests per week.")    
 
     if m.mode == 'r':
         oct95r = m.readlines()
@@ -318,9 +318,9 @@ def regexsearch(lines):
             oct95fcount += 1
     oct95davg = oct95fcount/11
     oct95wavg = oct95fcount/1.57
-    print "\nOctober 1995 results:"        
-    print "During the month of October 1995, there was a total number of", oct95fcount, "ending on the 11th."
-    print "That is an average of", str(round(oct95davg,2)), "requests per day, and an average of", str(round(oct95wavg,2)), "requests per week."    
+    print("\nOctober 1995 results:")        
+    print("During the month of October 1995, there was a total number of", oct95fcount, "ending on the 11th.")
+    print("That is an average of", str(round(oct95davg,2)), "requests per day, and an average of", str(round(oct95wavg,2)), "requests per week.")    
             
     a.close()
     b.close()
